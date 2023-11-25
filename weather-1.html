@@ -1,0 +1,74 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather App</title>
+    <link type="text/css" href="styles.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Karla:wght@300&family=Outfit:wght@300&family=Shippori+Antique+B1&family=Yanone+Kaffeesatz&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    />
+  </head>
+  <body>
+    <div class="conatiner">
+      <div class="main">
+        <div class="search-div">
+          <input type="text" class="search-input" />
+          <i class="fas fa-search" onclick="getTemparature()"></i>
+        </div>
+        <div class="loader">
+          <i class="fas fa-circle-notch fa-spin"></i>
+        </div>
+        <div class="content">
+          <div class="title">Weather in <span id="city"></span></div>
+          <div class="temp"><span id="deg">28</span><sup>o</sup>C</div>
+          <div class="icon">
+            <img src="" id="img" /><span id="icon-desc">Broken Clouds</span>
+          </div>
+          <div class="details">
+            <div>Humidity: <span id="humidity">66%</span></div>
+            <div>Wind: <span id="wind">3.6km/h</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      // hide content and loader initially
+      document.querySelector('.content').style.display = 'none';
+      document.querySelector('.loader').style.display = 'none';
+
+      function getTemparature() {
+        let city = document.querySelector('.search-input').value;
+        document.querySelector('.loader').style.display = 'block';
+        document.querySelector('.content').style.display = 'none';
+        let api = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=0588189ab51e44f65305932d6755e701`;
+        fetch(api)
+          .then((response) => response.json())
+          .then((response) => {
+            let cityName = response.name;
+            let temp = response.main.temp;
+            let iconDesc = response.weather[0].description;
+            let image = `https://openweathermap.org/img/w/${response.weather[0].icon}.png`;
+            let humidity = response.main.humidity;
+            let wind = response.wind.speed;
+            document.getElementById('city').innerHTML = cityName;
+            document.getElementById('deg').innerHTML = temp;
+            document.getElementById('icon-desc').innerHTML = iconDesc;
+            document.getElementById('img').src = image;
+            document.getElementById('humidity').innerHTML = humidity;
+            document.getElementById('wind').innerHTML = wind;
+            document.querySelector('.content').style.display = 'block';
+            document.querySelector('.loader').style.display = 'none';
+            document.querySelector('.search-input').value = '';
+          });
+      }
+    </script>
+  </body>
+</html>
